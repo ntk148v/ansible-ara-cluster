@@ -32,7 +32,7 @@ services:
       - ./nginx/htpasswd:/etc/nginx/.htpasswd:ro
     ports:
       - 8000:8000 # Expose Nginx on port 8000
-    restart: unless-stopped
+    restart: always
 
   postgresql:
     image: bitnami/postgresql-repmgr:17
@@ -53,6 +53,7 @@ services:
       - REPMGR_NODE_NAME=${REPMGR_NODE_NAME}
       - REPMGR_NODE_NETWORK_NAME=${REPMGR_NODE_NETWORK_NAME}
       - REPMGR_PORT_NUMBER=5433
+    restart: always
 
   pgpool:
     image: docker.io/bitnami/pgpool:4
@@ -76,3 +77,4 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
