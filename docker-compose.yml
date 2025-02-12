@@ -9,6 +9,7 @@ services:
     image: recordsansible/ara-api:latest
     container_name: ara
     environment:
+      - ARA_ALLOWED_HOSTS=["*"]
       - ARA_DATABASE_DRIVER=postgresql
       - ARA_DATABASE_USER=ara
       - ARA_DATABASE_PASSWORD=${ARA_DATABASE_PASSWORD}
