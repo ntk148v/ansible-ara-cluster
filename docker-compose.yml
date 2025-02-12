@@ -4,8 +4,27 @@ volumes:
   pg_data:
     driver: local
 
+networks:
+  ara_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+
+x-common: &common
+  networks:
+    - ara_network
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "30m"
+      max-file: "3"
+  restart: always
+
 services:
   ara:
+    <<: *common
     image: recordsansible/ara-api:latest
     container_name: ara
     environment:
@@ -21,8 +40,8 @@ services:
       - ARA_WRITE_LOGIN_REQUIRED=False
     depends_on:
       - pgpool
-    restart: always
   nginx:
+    <<: *common
     image: nginx:latest
     container_name: nginx
     depends_on:
@@ -32,9 +51,9 @@ services:
       - ./nginx/htpasswd:/etc/nginx/.htpasswd:ro
     ports:
       - 8000:8000 # Expose Nginx on port 8000
-    restart: always
 
   postgresql:
+    <<: *common
     image: bitnami/postgresql-repmgr:17
     container_name: postgresql
     ports:
@@ -53,9 +72,9 @@ services:
       - REPMGR_NODE_NAME=${REPMGR_NODE_NAME}
       - REPMGR_NODE_NETWORK_NAME=${REPMGR_NODE_NETWORK_NAME}
       - REPMGR_PORT_NUMBER=5433
-    restart: always
 
   pgpool:
+    <<: *common
     image: docker.io/bitnami/pgpool:4
     container_name: pgpool
     ports:
@@ -77,4 +96,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    restart: always
