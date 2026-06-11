@@ -54,7 +54,7 @@ services:
 
   postgresql:
     <<: *common
-    image: bitnami/postgresql-repmgr:17
+    image: soldevelo/postgresql-repmgr:17
     container_name: postgresql
     ports:
       - 5433:5432
@@ -75,7 +75,7 @@ services:
 
   pgpool:
     <<: *common
-    image: docker.io/bitnami/pgpool:4
+    image: docker.io/soldevelo/pgpool:4
     container_name: pgpool
     ports:
       - 5432:5432
